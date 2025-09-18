@@ -1,0 +1,75 @@
+## Inquire rotated pole parameters
+```{r}
+library(RNetCDF)
+file = "ts_EUR-6km_ECMWF-ERAINT_REA6_r1i1p1f1_COSMO_v1_mon_199501-199512.nc"
+n = open.nc(file)
+att.get.nc(n, "rotated_latitude_longitude", "grid_north_pole_latitude")
+att.get.nc(n, "rotated_latitude_longitude", "grid_north_pole_longitude")
+att.get.nc(n, "rotated_latitude_longitude", "north_pole_grid_longitude")
+close.nc(n)
+```
+
+## Read nc file and print CRS
+```{r}
+library(stars)
+r = read_mdim(file, "ts")
+st_crs(r) # WKT crs recognized by GDAL
+```
+
+
+## Plot in rotated pole coordinates
+```{r}
+plot(r[,,,1], reset = FALSE, axes = TRUE) # first time step, in rotated grid
+countries <- maps::map(fill=TRUE, plot=FALSE) |> st_as_sfc() # countries in OGC:CRS84
+to_cosmorea = "+proj=ob_tran +o_proj=lonlat +o_lon_p=0 +o_lat_p=39.25 +lon_0=18"
+countries |> st_transform(to_cosmorea) |> # convert world map to COSMOREA rotated pole coordinates
+   plot(add=TRUE, col = NA, border = 'orange') 
+```
+
+
+## Plot in equirectangular projection
+```{r}
+m = read_mdim(file, "ts")
+m1 = st_rotate(m, -162, 39.25)
+downsample = 10 # use 10 for coarse but quick plots
+plot(m1, downsample = downsample, axes = TRUE)
+plot(countries, add=TRUE, col = NA, border = 'orange') 
+```
+
+## Plot in equirect projection, using PROJ and `st_transform`
+```{r}
+m0 = st_transform(m, 'OGC:CRS84')
+plot(m0[,,,1], downsample = downsample, axes = TRUE, reset = FALSE)
+plot(countries, add=TRUE, col = NA, border = 'orange') 
+```
+
+## The "old" PROJ way, using `ob_tran`
+```{r}
+m0 = m
+st_crs(m0) = 'OGC:CRS84' # do as if m is in normal geographic coordinates;
+# use inverse transformation:
+obtr = st_crs("+proj=ob_tran +o_proj=latlon +o_lon_p=-162.0 +o_lat_p=39.25 +lon_0=180 +datum=WGS84")
+m0 = st_transform(m0, obtr)
+plot(m0[,,,1], downsample = downsample, axes = TRUE, reset = FALSE)
+plot(countries, add=TRUE, col = NA, border = 'orange') 
+```
+
+
+## Plot in orthographic projection, centered on lon 18E lat 50N
+```{r}
+ortho = st_crs("+proj=ortho +lon_0=18 +lat_0=50")
+m2 = st_transform(m1, ortho)
+plot(m2, downsample = downsample, graticule = TRUE)
+countries |> st_transform(ortho) |>
+  plot(add = TRUE, col = NA, border = 'orange')
+```
+
+## Warp to coarse raster in equirectangular
+```{r}
+# new grid:
+m2 = st_as_stars(st_bbox(m1), nx = 200, ny = 100)
+# m3 = gdal_utils("warp", m1, m2)
+m3 = st_warp(m1, m2, threshold = .08)
+plot(m3[,,,1], axes = TRUE, reset = FALSE)
+plot(countries, add = TRUE, col = NA, border = 'orange')
+```
