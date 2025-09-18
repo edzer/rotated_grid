@@ -32,7 +32,7 @@ countries |> st_transform(to_cosmorea) |> # convert world map to COSMOREA rotate
 m = read_mdim(file, "ts")
 m1 = st_rotate(m, -162, 39.25)
 downsample = 10 # use 10 for coarse but quick plots
-plot(m1, downsample = downsample, axes = TRUE)
+plot(m1[,,,1], downsample = downsample, axes = TRUE)
 plot(countries, add=TRUE, col = NA, border = 'orange') 
 ```
 
@@ -59,7 +59,7 @@ plot(countries, add=TRUE, col = NA, border = 'orange')
 ```{r}
 ortho = st_crs("+proj=ortho +lon_0=18 +lat_0=50")
 m2 = st_transform(m1, ortho)
-plot(m2, downsample = downsample, graticule = TRUE)
+plot(m2[,,,1], downsample = downsample, graticule = TRUE)
 countries |> st_transform(ortho) |>
   plot(add = TRUE, col = NA, border = 'orange')
 ```

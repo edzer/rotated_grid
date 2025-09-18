@@ -173,7 +173,7 @@ GEOGCRS["Rotated_pole",
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">=</span> <span class="fu">read_mdim</span>(file, <span class="st">"ts"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="fu">st_rotate</span>(m, <span class="sc">-</span><span class="dv">162</span>, <span class="fl">39.25</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>downsample <span class="ot">=</span> <span class="dv">10</span> <span class="co"># use 10 for coarse but quick plots</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m1, <span class="at">downsample =</span> downsample, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m1[,,,<span class="dv">1</span>], <span class="at">downsample =</span> downsample, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(countries, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">'orange'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -223,7 +223,7 @@ GEOGCRS["Rotated_pole",
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ortho <span class="ot">=</span> <span class="fu">st_crs</span>(<span class="st">"+proj=ortho +lon_0=18 +lat_0=50"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">=</span> <span class="fu">st_transform</span>(m1, ortho)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m2, <span class="at">downsample =</span> downsample, <span class="at">graticule =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m2[,,,<span class="dv">1</span>], <span class="at">downsample =</span> downsample, <span class="at">graticule =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>countries <span class="sc">|&gt;</span> <span class="fu">st_transform</span>(ortho) <span class="sc">|&gt;</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="cn">NA</span>, <span class="at">border =</span> <span class="st">'orange'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
