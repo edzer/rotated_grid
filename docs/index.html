@@ -80,6 +80,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<section id="dealing-with-rotated-pole-grids" class="level1">
+<h1>Dealing with rotated pole grids</h1>
+<p>We look at reanalysis datasets from the COSMO model (see e.g.&nbsp;<a href="https://reanalysis.meteo.uni-bonn.de/?COSMO-REA6">here</a>) which come as NetCDF files with a cartesian (regular) grid in unprojected, but rotated pole coordinates. Why do this? This model is run for Europe. Cartesian grids have pretty good properties close to the equator: cells are square, and pretty much of equal size. The futher away you get from the equator, the worse this gets. Rotating the pole such that the new equator goes through the center of the model area gets you these favourable conditions. The problem addressed below is how to deal with such data, when one wants to combine it with other data (here: country boundaries in regular geographic coordinates).</p>
+<p>If you have other suggestions for dealing with such data, let me know!</p>
 <section id="inquire-rotated-pole-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="inquire-rotated-pole-parameters">Inquire rotated pole parameters</h2>
 <div class="cell">
@@ -201,6 +205,7 @@ GEOGCRS["Rotated_pole",
 </section>
 <section id="the-old-proj-way-using-ob_tran" class="level2">
 <h2 class="anchored" data-anchor-id="the-old-proj-way-using-ob_tran">The “old” PROJ way, using <code>ob_tran</code></h2>
+<p>This is what we would have to do if GDAL would not recognize the rotated pole “projection” and leave us just with the numbers, and if we had the rotation parameters (see first chunk):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>m0 <span class="ot">=</span> m</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(m0) <span class="ot">=</span> <span class="st">'OGC:CRS84'</span> <span class="co"># do as if m is in normal geographic coordinates;</span></span>
@@ -256,6 +261,7 @@ threshold): using Euclidean distance measures on geodetic coordinates</code></pr
 </div>
 </div>
 </div>
+</section>
 </section>
 
 </main>

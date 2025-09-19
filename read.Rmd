@@ -1,3 +1,19 @@
+# Dealing with rotated pole grids
+
+We look at reanalysis datasets from the COSMO model (see
+e.g. [here](https://reanalysis.meteo.uni-bonn.de/?COSMO-REA6)) which
+come as NetCDF files with a cartesian (regular) grid in unprojected,
+but rotated pole coordinates. Why do this?  This model is run for
+Europe.  Cartesian grids have pretty good properties close to the
+equator: cells are square, and pretty much of equal size. The futher
+away you get from the equator, the worse this gets. Rotating the pole
+such that the new equator goes through the center of the model area
+gets you these favourable conditions. The problem  addressed below is
+how to deal with such data, when one wants to combine it with other
+data (here: country boundaries in regular geographic coordinates).
+
+If you have other suggestions for dealing with such data, let me know!
+
 ## Inquire rotated pole parameters
 ```{r}
 library(RNetCDF)
@@ -44,6 +60,8 @@ plot(countries, add=TRUE, col = NA, border = 'orange')
 ```
 
 ## The "old" PROJ way, using `ob_tran`
+
+This is what we would have to do if GDAL would not recognize the rotated pole "projection" and leave us just with the numbers, and if we had the rotation parameters (see first chunk):
 ```{r}
 m0 = m
 st_crs(m0) = 'OGC:CRS84' # do as if m is in normal geographic coordinates;
